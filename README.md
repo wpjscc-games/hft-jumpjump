@@ -29,5 +29,13 @@ Link: http://opengameart.org/content/bricks-tilable
 
 
 
+支持h5
+```
+电脑：https://game-hft-jump.test.jc91715.top/game.html?settings={gameId:111111}
+手机：https://game-hft-jump.test.jc91715.top/controller?settings={gameId:111111}
+```
+
+
+
 
 

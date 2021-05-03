@@ -87,8 +87,8 @@ requirejs([
   var startClient = function() {
 
     g_client = new GameClient({
-      url: 'wss://game-workerman-center.test.jc91715.top'
-
+      url: 'wss://game-workerman-center.test.jc91715.top',
+      gameId:globals.gameId
     });
     //
     var handleScore = function() {

@@ -420,7 +420,7 @@ window.g = globals;
 
       var server = new GameServer({
         url: 'wss://game-workerman-center.test.jc91715.top',
-
+        gameId:globals.gameId
       });
 
       setInterval(()=>{
