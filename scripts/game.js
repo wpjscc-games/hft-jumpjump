@@ -44,45 +44,45 @@ function $(id) {
 
 // Start the main app logic.
 requirejs([
-    '../dist/hft',
-    '../dist/game-utils',
-    '../dist/sample-ui',
-    '../3rdparty/tdl/tdl/textures',
-    '../3rdparty/tdl/tdl/webgl',
-    '../3rdparty/hft-utils/dist/audio',
-    '../3rdparty/hft-utils/dist/entitysystem',
-    '../3rdparty/hft-utils/dist/imageloader',
-    '../3rdparty/hft-utils/dist/imageutils',
-    '../3rdparty/hft-utils/dist/levelloader',
-    '../3rdparty/hft-utils/dist/spritemanager',
-    './collectable',
-    './gamepad',
-    './level',
-    './levelmanager',
-    './particleeffectmanager',
-    './particlesystemmanager',
-    './playermanager',
-    './scoremanager',
-  ], function(
-    happyfuntimes,
-    gameUtils,
-    sampleUI,
-    Textures,
-    WebGL,
-    AudioManager,
-    EntitySystem,
-    ImageLoader,
-    ImageUtils,
-    LevelLoader,
-    SpriteManager,
-    Collectable,
-    GamepadManager,
-    Level,
-    LevelManager,
-    ParticleEffectManager,
-    ParticleSystemManager,
-    PlayerManager,
-    ScoreManager) {
+  '../dist/hft',
+  '../dist/game-utils',
+  '../dist/sample-ui',
+  '../3rdparty/tdl/tdl/textures',
+  '../3rdparty/tdl/tdl/webgl',
+  '../3rdparty/hft-utils/dist/audio',
+  '../3rdparty/hft-utils/dist/entitysystem',
+  '../3rdparty/hft-utils/dist/imageloader',
+  '../3rdparty/hft-utils/dist/imageutils',
+  '../3rdparty/hft-utils/dist/levelloader',
+  '../3rdparty/hft-utils/dist/spritemanager',
+  './collectable',
+  './gamepad',
+  './level',
+  './levelmanager',
+  './particleeffectmanager',
+  './particlesystemmanager',
+  './playermanager',
+  './scoremanager',
+], function (
+  happyfuntimes,
+  gameUtils,
+  sampleUI,
+  Textures,
+  WebGL,
+  AudioManager,
+  EntitySystem,
+  ImageLoader,
+  ImageUtils,
+  LevelLoader,
+  SpriteManager,
+  Collectable,
+  GamepadManager,
+  Level,
+  LevelManager,
+  ParticleEffectManager,
+  ParticleSystemManager,
+  PlayerManager,
+  ScoreManager) {
   var GameServer = happyfuntimes.GameServer;
   var LocalNetPlayer = happyfuntimes.LocalNetPlayer;
   var gameSupport = gameUtils.gameSupport;
@@ -92,7 +92,7 @@ requirejs([
 
   var g_debug = false;
   var g_services = {};
-window.s = g_services;
+  window.s = g_services;
 
   var g_entitySystem = new EntitySystem();
   g_services.entitySystem = g_entitySystem;
@@ -117,22 +117,23 @@ window.s = g_services;
   function hideInstructions() {
     instructionElem.style.display = "none";
   }
+
   function showInstructions() {
     instructionElem.style.display = "block";
   }
   g_services.hideInstructions = hideInstructions;
 
   var globals = {
-    numLocalPlayers: 1,  // num players when local (ie, debugger)
+    numLocalPlayers: 1, // num players when local (ie, debugger)
     debug: false,
     tileInspector: false,
     showState: false,
     moveAcceleration: 500,
     maxVelocity: [200, 1000],
-    jumpDuration: 0.2,        // how long the jump velocity can be applied
+    jumpDuration: 0.2, // how long the jump velocity can be applied
     jumpVelocity: -350,
-    minStopVelocity: 25,      // below this we're idling
-    stopFriction: 0.95,       // amount of velocity to keep each frame
+    minStopVelocity: 25, // below this we're idling
+    stopFriction: 0.95, // amount of velocity to keep each frame
     gravity: 1200,
     frameCount: 0,
     idleAnimSpeed: 4,
@@ -142,19 +143,34 @@ window.s = g_services;
     fallTopAnimVelocity: 100,
     drawOffset: {},
     scale: 1,
-    levels: [
-      { width: 10, height: 15, url: "assets/levels/level10x15.json", },
-      { width: 20, height: 10, url: "assets/levels/level20x10.json", },
-      { width: 30, height: 15, url: "assets/levels/level30x15.json", },
-      { width: 40, height: 20, url: "assets/levels/level40x20.json", },
+    levels: [{
+        width: 10,
+        height: 15,
+        url: "assets/levels/level10x15.json",
+      },
+      {
+        width: 20,
+        height: 10,
+        url: "assets/levels/level20x10.json",
+      },
+      {
+        width: 30,
+        height: 15,
+        url: "assets/levels/level30x15.json",
+      },
+      {
+        width: 40,
+        height: 20,
+        url: "assets/levels/level40x20.json",
+      },
     ],
   };
-window.g = globals;
+  window.g = globals;
 
   function startLocalPlayers() {
     var localPlayers = [];
 
-    var addLocalPlayer = function() {
+    var addLocalPlayer = function () {
       var netPlayer = new LocalNetPlayer();
       localPlayers.push({
         player: g_playerManager.startPlayer(netPlayer, "Player" + (localPlayers.length + 1)),
@@ -165,7 +181,7 @@ window.g = globals;
       });
     };
 
-    var removeLocalPlayer = function(playerId) {
+    var removeLocalPlayer = function (playerId) {
       if (playerId < localPlayers.length) {
         localPlayers[playerId].netPlayer.sendEvent('disconnect');
         localPlayers.splice(playerId, 1);
@@ -176,36 +192,36 @@ window.g = globals;
       addLocalPlayer();
     }
 
-    var handleLeftRight = function(playerId, pressed, bit) {
+    var handleLeftRight = function (playerId, pressed, bit) {
       var localPlayer = localPlayers[playerId];
       if (localPlayer) {
         localPlayer.leftRight = (localPlayer.leftRight & ~bit) | (pressed ? bit : 0);
         if (localPlayer.leftRight != localPlayer.oldLeftRight) {
           localPlayer.oldLeftRight = localPlayer.leftRight;
           localPlayer.netPlayer.sendEvent('move', {
-              dir: (localPlayer.leftRight & 1) ? -1 : ((localPlayer.leftRight & 2) ? 1 : 0),
+            dir: (localPlayer.leftRight & 1) ? -1 : ((localPlayer.leftRight & 2) ? 1 : 0),
           });
         }
       }
     };
 
-    var handleJump = function(playerId, pressed) {
+    var handleJump = function (playerId, pressed) {
       var localPlayer = localPlayers[playerId];
       if (localPlayer) {
         if (localPlayer.jump != pressed) {
           localPlayer.jump = pressed;
           localPlayer.netPlayer.sendEvent('jump', {
-              jump: pressed,
+            jump: pressed,
           });
         }
       }
     };
 
-    var handleTestSound = (function() {
+    var handleTestSound = (function () {
       var soundNdx = 0;
       var soundIds;
 
-      return function(pressed) {
+      return function (pressed) {
         if (!soundIds) {
           soundIds = g_services.audioManager.getSoundIds();
         }
@@ -218,32 +234,52 @@ window.g = globals;
       };
     }());
 
-    var keys = { };
-    keys[input.cursorKeys.kLeft]  = function(e) { handleLeftRight(0, e.pressed, 0x1); }
-    keys[input.cursorKeys.kRight] = function(e) { handleLeftRight(0, e.pressed, 0x2); }
-    keys["Z"]                     = function(e) { handleJump(0, e.pressed);           }
-    keys["A"]                     = function(e) { handleLeftRight(1, e.pressed, 0x1); }
-    keys["D"]                     = function(e) { handleLeftRight(1, e.pressed, 0x2); }
-    keys["W"]                     = function(e) { handleJump(1, e.pressed);           }
-    keys["X"]                     = function(e) { handleTestSound(e.pressed);         }
-    keys[187]                     = function(e) { addLocalPlayer();                   }
-    keys[189]                     = function(e) { removeLocalPlayer(2);               }
+    var keys = {};
+    keys[input.cursorKeys.kLeft] = function (e) {
+      handleLeftRight(0, e.pressed, 0x1);
+    }
+    keys[input.cursorKeys.kRight] = function (e) {
+      handleLeftRight(0, e.pressed, 0x2);
+    }
+    keys["Z"] = function (e) {
+      handleJump(0, e.pressed);
+    }
+    keys["A"] = function (e) {
+      handleLeftRight(1, e.pressed, 0x1);
+    }
+    keys["D"] = function (e) {
+      handleLeftRight(1, e.pressed, 0x2);
+    }
+    keys["W"] = function (e) {
+      handleJump(1, e.pressed);
+    }
+    keys["X"] = function (e) {
+      handleTestSound(e.pressed);
+    }
+    keys[187] = function (e) {
+      addLocalPlayer();
+    }
+    keys[189] = function (e) {
+      removeLocalPlayer(2);
+    }
     input.setupKeys(keys);
   }
 
   misc.applyUrlSettings(globals);
 
   var canvas = $("playfield");
-  var gl = WebGL.setupWebGL(canvas, {alpha:false}, function() {});
+  var gl = WebGL.setupWebGL(canvas, {
+    alpha: false
+  }, function () {});
   g_services.spriteManager = new SpriteManager();
   g_services.particleSystemManager = new ParticleSystemManager(2);
 
-  var chooseLevel = function(levels, maxWidth, maxHeight) {
+  var chooseLevel = function (levels, maxWidth, maxHeight) {
     // pick the largest level that fits
     var largestLevel = levels[0];
     var largestSize = 0;
-    levels.forEach(function(level) {
-      var hSpace = maxWidth  - level.width  * 32;
+    levels.forEach(function (level) {
+      var hSpace = maxWidth - level.width * 32;
       var vSpace = maxHeight - level.height * 32;
       if (hSpace >= 0 && vSpace >= 0) {
         var size = level.width * level.height;
@@ -257,7 +293,7 @@ window.g = globals;
   };
 
 
-  var resize = function() {
+  var resize = function () {
     if (misc.resize(canvas)) {
       var level = chooseLevel(globals.levels, canvas.clientWidth, canvas.clientHeight);
       if (level !== globals.chosenLevel) {
@@ -277,7 +313,7 @@ window.g = globals;
     s.color = "white";
     s.pointerEvents = "none";
     document.body.appendChild(element);
-    $("outer").addEventListener('mousemove', function(e) {
+    $("outer").addEventListener('mousemove', function (e) {
       var pos = input.getRelativeCoordinates(e.target, e);
       var level = g_levelManager.getLevel();
       var offset = level.getTransformOffset(levelCtx);
@@ -286,9 +322,9 @@ window.g = globals;
       var tileId = level.getTileByPixel(x, y);
       var tileInfo = g_levelManager.getTileInfo(tileId);
       var px = (canvas.clientLeft + pos.x) + "px";
-      var py = (canvas.clientTop  + pos.y) + "px";
+      var py = (canvas.clientTop + pos.y) + "px";
       s.left = px;
-      s.top  = py;
+      s.top = py;
       element.innerHTML = "<pre>" +
         "x: " + x + "\n" +
         "y: " + y + "\n" +
@@ -296,7 +332,7 @@ window.g = globals;
     }, false);
   };
 
-  var createTexture = function(img) {
+  var createTexture = function (img) {
     var tex = Textures.loadTexture(img);
     tex.setParameter(gl.TEXTURE_MIN_FILTER, gl.NEAREST);
     tex.setParameter(gl.TEXTURE_MAG_FILTER, gl.NEAREST);
@@ -309,19 +345,39 @@ window.g = globals;
   // colorize: number of colors to make
   // slizes: number = width of all slices, array = width of each consecutive slice
   var images = {
-    idle:  { url: "assets/spr_idle.png",  colorize: 32, scale: 2, slices: 16, },
-    move:  { url: "assets/spr_run.png",   colorize: 32, scale: 2, slices: 16, },
-    jump:  { url: "assets/spr_jump.png",  colorize: 32, scale: 2, slices: [16, 17, 17, 18, 16, 16] },
-//    brick: { url: "assets/bricks.png",    colorize:  1, scale: 2, slices: 48, },
-    coin:  { url: "assets/coin_anim.png", colorize:  1, scale: 4, slices: 8, },
+    idle: {
+      url: "assets/spr_idle.png",
+      colorize: 32,
+      scale: 2,
+      slices: 16,
+    },
+    move: {
+      url: "assets/spr_run.png",
+      colorize: 32,
+      scale: 2,
+      slices: 16,
+    },
+    jump: {
+      url: "assets/spr_jump.png",
+      colorize: 32,
+      scale: 2,
+      slices: [16, 17, 17, 18, 16, 16]
+    },
+    //    brick: { url: "assets/bricks.png",    colorize:  1, scale: 2, slices: 48, },
+    coin: {
+      url: "assets/coin_anim.png",
+      colorize: 1,
+      scale: 4,
+      slices: 8,
+    },
   };
   var colors = [];
   g_services.images = images;
   g_services.colors = colors;
-  var processImages = function() {
+  var processImages = function () {
     // make 32 colors of duck. Maybe we should do this in WebGL and use a shader!?
     var duckBlueRange = [180 / 360, 275 / 360];
-    Object.keys(images).forEach(function(name) {
+    Object.keys(images).forEach(function (name) {
       var image = images[name];
       image.colors = [];
       image.imgColors = [];
@@ -363,20 +419,20 @@ window.g = globals;
       imageMappings: globals.debug ? {} : realImageMappings,
     };
     globals.chosenLevel = chooseLevel(globals.levels, canvas.clientWidth, canvas.clientHeight);
-    LevelLoader.load(gl, globals.chosenLevel.url, loaderOptions, function(err, level) {
+    LevelLoader.load(gl, globals.chosenLevel.url, loaderOptions, function (err, level) {
       if (err) {
         throw err;
       }
-      level.layers = level.layers.map(function(layer) {
+      level.layers = level.layers.map(function (layer) {
         return new Level(layer);
       });
       globals.level = level;
 
       // Figure out which level is the play one.
       var playLevel;
-      globals.level.layers.forEach(function(layer) {
+      globals.level.layers.forEach(function (layer) {
         if (layer.name == "Tile Layer 1" ||
-            strings.startsWith(layer.name.toLowerCase(), "play")) {
+          strings.startsWith(layer.name.toLowerCase(), "play")) {
           playLevel = layer;
         }
       });
@@ -388,9 +444,9 @@ window.g = globals;
       startGame();
     });
 
-    var resetGame = function() {
+    var resetGame = function () {
       g_services.levelManager.reset(canvas.width, canvas.height, globals.playLevel);
-      g_services.playerManager.forEachPlayer(function(player) {
+      g_services.playerManager.forEachPlayer(function (player) {
         player.reset();
       });
       if (globals.coin) {
@@ -412,6 +468,7 @@ window.g = globals;
       // Add Gamepads
       g_services.gamepadManager = new GamepadManager()
       g_services.gamepadManager.on('playerconnect', (player, ndx) => {
+        console.log(player, ndx)
         g_playerManager.startPlayer(player, "GamePad" + (ndx + 1));
       });
 
@@ -420,15 +477,15 @@ window.g = globals;
 
       var server = new GameServer({
         url: 'wss://game-workerman-center.test.jc91715.top',
-        gameId:globals.gameId
+        gameId: globals.gameId
       });
 
-      setInterval(()=>{
-        if(server.isConnected){
-          server.sendCmd('P',-1,{})
+      setInterval(() => {
+        if (server.isConnected) {
+          server.sendCmd('P', -1, {})
           console.log('P')
         }
-      },55000)
+      }, 55000)
 
       g_services.server = server;
       server.on('playerconnect', g_playerManager.startPlayer.bind(g_playerManager));
@@ -440,7 +497,7 @@ window.g = globals;
 
   ImageLoader.loadImages(images, processImages);
 
-  var mainloop = function() {
+  var mainloop = function () {
     resize();
     g_services.gamepadManager.process();
     g_services.levelManager.getDrawOffset(globals.drawOffset);
@@ -450,22 +507,22 @@ window.g = globals;
     gl.clearColor(0.15, 0.15, 0.15, 0);
     gl.clear(gl.COLOR_BUFFER_BIT);
     var level = g_services.levelManager.getLevel();
-    var xtraX = ((gl.canvas.width  - level.levelWidth ) / 2 | 0);
+    var xtraX = ((gl.canvas.width - level.levelWidth) / 2 | 0);
     var xtraY = ((gl.canvas.height - level.levelHeight) / 2 | 0);
     gl.scissor(xtraX, xtraY, level.levelWidth, level.levelHeight);
     gl.enable(gl.SCISSOR_TEST);
     gl.clearColor(
-        globals.level.backgroundColor[0],
-        globals.level.backgroundColor[1],
-        globals.level.backgroundColor[2],
-        globals.level.backgroundColor[3]);
+      globals.level.backgroundColor[0],
+      globals.level.backgroundColor[1],
+      globals.level.backgroundColor[2],
+      globals.level.backgroundColor[3]);
     gl.clear(gl.COLOR_BUFFER_BIT);
     gl.disable(gl.SCISSOR_TEST);
     gl.disable(gl.BLEND);
 
 
     var layerNdx = 0;
-    var layers    = globals.level.layers;
+    var layers = globals.level.layers;
     var numLayers = layers.length;
     if (globals.playLevel) {
       // Draw all layers before and including playLevel
@@ -489,7 +546,7 @@ window.g = globals;
 
     if (globals.playLevel) {
       // Draw the remaining layers
-      for(; layerNdx < numLayers; ++layerNdx) {
+      for (; layerNdx < numLayers; ++layerNdx) {
         var layer = layers[layerNdx];
         layer.draw(g_services.levelManager, globals);
       }
@@ -501,14 +558,76 @@ window.g = globals;
   };
 
   var sounds = {
-    coin:              { jsfx: ["square",0.0000,0.4000,0.0000,0.0240,0.4080,0.3480,20.0000,909.0000,2400.0000,0.0000,0.0000,0.0000,0.0100,0.0003,0.0000,0.2540,0.1090,0.0000,0.0000,0.0000,0.0000,0.0000,1.0000,0.0000,0.0000,0.0000,0.0000], },
-    jump:              { jsfx: ["square",0.0000,0.4000,0.0000,0.1800,0.0000,0.2040,20.0000,476.0000,2400.0000,0.3360,0.0000,0.0000,0.0100,0.0003,0.0000,0.0000,0.0000,0.5000,0.0000,0.0000,0.0000,0.0000,1.0000,0.0000,0.0000,0.0000,0.0000], },
-    coinland:          { jsfx: ["square",0.0000,0.4000,0.0000,0.0520,0.3870,0.1160,20.0000,1050.0000,2400.0000,0.0000,0.0000,0.0000,0.0100,0.0003,0.0000,0.0000,0.0000,0.0000,0.0000,0.0000,0.0000,0.0000,1.0000,0.0000,0.0000,0.0000,0.0000], },
-    bonkhead:          { jsfx: ["square",0.0000,0.4000,0.0000,0.0120,0.4500,0.1140,20.0000,1218.0000,2400.0000,0.0000,0.0000,0.0000,0.0100,0.0003,0.0000,0.5140,0.2350,0.0000,0.0000,0.0000,0.0000,0.0000,1.0000,0.0000,0.0000,0.0000,0.0000], },
-    land:              { jsfx: ["sine",0.0000,0.4000,0.0000,0.1960,0.0000,0.1740,20.0000,1012.0000,2400.0000,-0.7340,0.0000,0.0000,0.0100,0.0003,0.0000,0.0000,0.0000,0.3780,0.0960,0.0000,0.0000,0.0000,1.0000,0.0000,0.0000,0.0000,0.0000] , },
+    coin: {
+      jsfx: ["square", 0.0000, 0.4000, 0.0000, 0.0240, 0.4080, 0.3480, 20.0000, 909.0000, 2400.0000, 0.0000, 0.0000, 0.0000, 0.0100, 0.0003, 0.0000, 0.2540, 0.1090, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 1.0000, 0.0000, 0.0000, 0.0000, 0.0000],
+    },
+    jump: {
+      jsfx: ["square", 0.0000, 0.4000, 0.0000, 0.1800, 0.0000, 0.2040, 20.0000, 476.0000, 2400.0000, 0.3360, 0.0000, 0.0000, 0.0100, 0.0003, 0.0000, 0.0000, 0.0000, 0.5000, 0.0000, 0.0000, 0.0000, 0.0000, 1.0000, 0.0000, 0.0000, 0.0000, 0.0000],
+    },
+    coinland: {
+      jsfx: ["square", 0.0000, 0.4000, 0.0000, 0.0520, 0.3870, 0.1160, 20.0000, 1050.0000, 2400.0000, 0.0000, 0.0000, 0.0000, 0.0100, 0.0003, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 1.0000, 0.0000, 0.0000, 0.0000, 0.0000],
+    },
+    bonkhead: {
+      jsfx: ["square", 0.0000, 0.4000, 0.0000, 0.0120, 0.4500, 0.1140, 20.0000, 1218.0000, 2400.0000, 0.0000, 0.0000, 0.0000, 0.0100, 0.0003, 0.0000, 0.5140, 0.2350, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 1.0000, 0.0000, 0.0000, 0.0000, 0.0000],
+    },
+    land: {
+      jsfx: ["sine", 0.0000, 0.4000, 0.0000, 0.1960, 0.0000, 0.1740, 20.0000, 1012.0000, 2400.0000, -0.7340, 0.0000, 0.0000, 0.0100, 0.0003, 0.0000, 0.0000, 0.0000, 0.3780, 0.0960, 0.0000, 0.0000, 0.0000, 1.0000, 0.0000, 0.0000, 0.0000, 0.0000],
+    },
   };
   var audioManager = new AudioManager(sounds);
   g_services.audioManager = audioManager;
+
+  // download_canvas()
+  function download_canvas() {
+    console.log('start')
+    var canvas = document.querySelector("#playfield");
+
+    // Optional frames per second argument.
+    var stream = canvas.captureStream(25);
+    var recordedChunks = [];
+
+    console.log(stream);
+    var options = {
+      mimeType: "video/webm; codecs=vp9"
+    };
+    const mediaRecorder = new MediaRecorder(stream, options);
+
+    mediaRecorder.ondataavailable = handleDataAvailable;
+    mediaRecorder.start();
+
+    function handleDataAvailable(event) {
+      console.log("data-available");
+      if (event.data.size > 0) {
+        recordedChunks.push(event.data);
+        console.log(recordedChunks);
+        download();
+      } else {
+        // ...
+      }
+    }
+
+    function download() {
+      console.log('download',
+        recordedChunks
+      )
+      var blob = new Blob(recordedChunks, {
+        type: "video/webm"
+      });
+      var url = URL.createObjectURL(blob);
+      var a = document.createElement("a");
+      document.body.appendChild(a);
+      a.style = "display: none";
+      a.href = url;
+      a.download = "test.webm";
+      a.click();
+      window.URL.revokeObjectURL(url);
+    }
+
+    // demo: to download after 9sec
+    setTimeout(event => {
+      console.log("stopping");
+      mediaRecorder.stop();
+    }, 6000);
+  }
+
 });
-
-

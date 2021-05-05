@@ -34,6 +34,8 @@ Link: http://opengameart.org/content/bricks-tilable
 电脑：https://game-hft-jump.test.jc91715.top/game.html?settings={gameId:111111}
 手机：https://game-hft-jump.test.jc91715.top/controller?settings={gameId:111111}
 ```
+## 其他
+game.js 有一个 download_canvas 方法，可以下载游戏记录
 
 
 
