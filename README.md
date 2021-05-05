@@ -38,6 +38,13 @@ Link: http://opengameart.org/content/bricks-tilable
 * game.js 有一个 download_canvas 方法，可以下载游戏记录（webm格式的视频）
 * todo 怎么给webm添加音频？
 
+* 多个游戏服务器同步
+  * 1 支持渲染
+  * 2 主服务器同步数据到子服务器
+    * player 同步（可操作）
+    * 记录同步 （可操作）
+    * 随机金币同步 （子服务器不生成金币，主服务器生成金币后同步到子服务器）
+
 
 
 
