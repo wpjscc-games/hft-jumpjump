@@ -35,7 +35,8 @@ Link: http://opengameart.org/content/bricks-tilable
 手机：https://game-hft-jump.test.jc91715.top/controller?settings={gameId:111111}
 ```
 ## 其他
-game.js 有一个 download_canvas 方法，可以下载游戏记录
+* game.js 有一个 download_canvas 方法，可以下载游戏记录（webm格式的视频）
+* todo 怎么给webm添加音频？
 
 
 
