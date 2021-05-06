@@ -35,13 +35,16 @@ define([
     './level',
     './math',
     './tiles',
+    './random',
   ], function(
     sampleUI,
     Level,
     gmath,
-    Tiles) {
+    Tiles,
+    Random) {
 
   var Misc = sampleUI.misc;
+  var positionRandom = new Random.PseudoRandomGenerator();
 
   var levels = [];
 
@@ -295,8 +298,10 @@ define([
       if (++count > 10000) {
         throw("something's wrong with level data");
       }
-      var x = (2 + Misc.randInt(level.width  - 4));
-      var y = (2 + Misc.randInt(level.height - 4));
+      // var x = (2 + Misc.randInt(level.width  - 4));
+      // var y = (2 + Misc.randInt(level.height - 4));
+      var x = (2 + positionRandom.randomInt(level.width  - 4));
+      var y = (2 + positionRandom.randomInt(level.height - 4));
       var tile = this.getTileInfoByPixel(
         x * level.tileWidth,
         y * level.tileHeight);

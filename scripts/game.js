@@ -63,6 +63,7 @@ requirejs([
   './particlesystemmanager',
   './playermanager',
   './scoremanager',
+  './random'
 ], function (
   happyfuntimes,
   gameUtils,
@@ -82,7 +83,8 @@ requirejs([
   ParticleEffectManager,
   ParticleSystemManager,
   PlayerManager,
-  ScoreManager) {
+  ScoreManager
+  ) {
   var GameServer = happyfuntimes.GameServer;
   var LocalNetPlayer = happyfuntimes.LocalNetPlayer;
   var gameSupport = gameUtils.gameSupport;
